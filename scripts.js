@@ -6,6 +6,7 @@ const app = Vue.createApp({
         stopName: '',
         arena: 'all',
         available: false,
+        count: 0,
       },
       pageOption: {
         currPage: 1,
@@ -18,6 +19,15 @@ const app = Vue.createApp({
     }
   },
   computed: {
+    searchName: {
+      get() {
+        return this.filterOption.stopName;
+      },
+      set(val) {
+        this.pageOption.currPage = 1;
+        this.filterOption.stopName = val;
+      }
+    },
     filterStops() {
       return this.uBikeStops.filter(stop => stop.sna.indexOf(this.filterOption.stopName) != -1);
     },
@@ -26,8 +36,9 @@ const app = Vue.createApp({
       return this.filterStops.filter(stop => stop.sarea === this.filterOption.arena);
     },
     filterAvailable() {
-      if(!this.filterOption.available) return this.filterArena;
-      return this.filterArena.filter(stop => stop.sbi > 0);
+      const { available, count } = this.filterOption;
+      if(!available) return this.filterArena;
+      return this.filterArena.filter(stop => stop.sbi > count);
     },
     maxPage() {
       return Math.ceil(this.filterAvailable.length / this.pageOption.pageSize);

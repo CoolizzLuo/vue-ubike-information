@@ -57,7 +57,7 @@
   <div id="app">
 
     <div class="searchBar">
-      <label>站點名稱搜尋:<input type="text" @keyup="pageOption.currPage = 1" v-model.trim="filterOption.stopName"></label>
+      <label>站點名稱搜尋:<input type="text" v-model.trim="searchName"></label>
       <label>行政區篩選:
         <select v-model="filterOption.arena">
           <option value="all">不限區域</option>
@@ -76,7 +76,7 @@
         </select>
       </label>
       <label>每頁顯示數量:
-        <select v-model="pageOption.pageSize">
+        <select v-model.number="pageOption.pageSize">
           <option>20</option>
           <option>25</option>
           <option>30</option>
@@ -85,7 +85,14 @@
         </select>
       </label>
       <label>
-        <input type="checkbox" v-model="filterOption.available">僅顯示可用車輛站點
+        <input type="checkbox" v-model="filterOption.available">僅顯示可用車輛大於
+        <select v-model.number="filterOption.count">
+          <option>0</option>
+          <option>5</option>
+          <option>10</option>
+          <option>15</option>
+          <option>20</option>
+        </select>
       </label>
     </div>
 
