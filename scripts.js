@@ -42,6 +42,18 @@ const app = Vue.createApp({
     },
   },
   methods: {
+    timeFormat(t){
+      let date = [], time = [];
+
+      date.push(t.substr(0, 4));
+      date.push(t.substr(4, 2));
+      date.push(t.substr(6, 2));
+      time.push(t.substr(8, 2));
+      time.push(t.substr(10, 2));
+      time.push(t.substr(12, 2));
+
+      return date.join("/") + ' ' + time.join(":");
+    },
     setSort(obj) {
       if(this.sortOption.obj === obj) {
         this.sortOption.sort = !this.sortOption.sort;
