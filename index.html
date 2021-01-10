@@ -6,17 +6,88 @@
   <title>YouBike 臺北市公共自行車即時資訊</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    body{ padding: 1em;  }
+    body { 
+      padding: 1em;  
+    }
+    .searchBar {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .searchBar label {
+      margin: 0 10px;
+    }
+    .pageBar {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+    }
+    .pageBar li{
+      display: inline-block;
+      width: 30px;
+      text-align: center;
+      border: 1px solid #000;
+      font-size: 22px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .pageBar li:hover {
+      background: rgb(66, 64, 64);
+      color: #eee;
+    }
+    .pageBar li.active {
+      background: rgb(66, 64, 64);
+      color: #eee;
+    }
   </style>
 
 </head>
 <body>
 
   <h1>YouBike 臺北市公共自行車即時資訊</h1>
-
+  <p>
+    練習 13： YouBike 臺北市公共自行車即時資訊 <br>
+    完成下列表格，並加入:
+    1. 站點名稱搜尋
+    2. 目前可用車輛 / 總停車格 的排序功能
+    3. 加入分頁功能
+  </p>
+  <hr>
   <div id="app">
+
+    <div class="searchBar">
+      <label>站點名稱搜尋:<input type="text" @keyup="pageOption.currPage = 1" v-model.trim="filterOption.stopName"></label>
+      <label>行政區篩選:
+        <select v-model="filterOption.arena">
+          <option value="all">不限區域</option>
+          <option>中正區</option>
+          <option>大同區</option>
+          <option>中山區</option>
+          <option>松山區</option>
+          <option>大安區</option>
+          <option>萬華區</option>
+          <option>信義區</option>
+          <option>士林區</option>
+          <option>北投區</option>
+          <option>內湖區</option>
+          <option>南港區</option>
+          <option>文山區</option>
+        </select>
+      </label>
+      <label>每頁顯示數量:
+        <select v-model="pageOption.pageSize">
+          <option>20</option>
+          <option>25</option>
+          <option>30</option>
+          <option>35</option>
+          <option>40</option>
+        </select>
+      </label>
+      <label>
+        <input type="checkbox" v-model="filterOption.available">僅顯示可用車輛站點
+      </label>
+    </div>
 
     <table class="table table-striped">
       <thead>
@@ -24,28 +95,43 @@
           <th>#</th>
           <th>場站名稱</th>
           <th>場站區域</th>
-          <th>目前可用車輛</th>
-          <th>總停車格</th>
+          <th @click="setSort('sbi')">目前可用車輛
+            <template v-if="sortOption.obj == 'sbi'">
+              <i class="fa fa-sort-asc" aria-hidden="true" v-show="!sortOption.sort"></i>
+              <i class="fa fa-sort-desc" aria-hidden="true" v-show="sortOption.sort"></i>
+            </template>
+          </th>
+          <th @click="setSort('tot')">總停車格
+            <template v-if="sortOption.obj == 'tot'">
+              <i class="fa fa-sort-asc" aria-hidden="true" v-show="!sortOption.sort"></i>
+              <i class="fa fa-sort-desc" aria-hidden="true" v-show="sortOption.sort"></i>
+            </template>
+          </th>
           <th>資料更新時間</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="s in ubikeStops">
-          <td>{{ s.sno }}</td>
-          <td>{{ s.sna }}</td>
-          <td>{{ s.sarea }}</td>
-          <td>{{ s.sbi }}</td>
-          <td>{{ s.tot }}</td>
-          <td>{{ timeFormat(s.mday) }}</td>
+        <tr v-for="{sno, sna, sarea, sbi, tot, mday} in sortStops">
+          <td>{{ sno }}</td>
+          <td>{{ sna }}</td>
+          <td>{{ sarea }}</td>
+          <td>{{ sbi }}</td>
+          <td>{{ tot }}</td>
+          <td>{{ mday }}</td>
         </tr>
       </tbody>
-
     </table>
-
+    <ul class="pageBar">
+      <li @click="pageOption.currPage--" v-show="pageOption.currPage > 1"><i class="fa fa-arrow-left"></i></li>
+      <li v-for="item in maxPage" 
+        :class="{'active': pageOption.currPage == item}" 
+        @click="pageOption.currPage=item">{{ item }}</li>
+      <li @click="pageOption.currPage++" v-show="pageOption.currPage !== maxPage && maxPage > 1"><i class="fa fa-arrow-right"></i></li>
+    </ul>
   </div>
 
   <script src="https://unpkg.com/vue@next"></script>
-  <script src="./scripts.js?v=2020081401"></script>
+  <script src="./scripts.js"></script>
 
 </body>
 </html>
