@@ -18,16 +18,15 @@ const app = Vue.createApp({
       },
     }
   },
-  computed: {
-    searchName: {
-      get() {
-        return this.filterOption.stopName;
-      },
-      set(val) {
-        this.pageOption.currPage = 1;
-        this.filterOption.stopName = val;
-      }
+  watch: {
+    filterAvailable() {
+      this.pageOption.currPage = 1;
     },
+    'pageOption.pageSize'() {
+      this.pageOption.currPage = 1;
+    },
+  },
+  computed: {
     filterStops() {
       return this.uBikeStops.filter(stop => stop.sna.indexOf(this.filterOption.stopName) != -1);
     },
