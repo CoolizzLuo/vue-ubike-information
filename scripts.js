@@ -8,13 +8,13 @@ const app = Vue.createApp({
         available: false,
         count: 0,
       },
-      pageOption: {
-        currPage: 1,
-        pageSize: 20,
-      },
       sortOption: {
         obj: '', // sbi, tot
         sort: '', // asc or desc
+      },
+      pageOption: {
+        currPage: 1,
+        pageSize: 20,
       },
     }
   },
@@ -28,7 +28,7 @@ const app = Vue.createApp({
   },
   computed: {
     filterStops() {
-      return this.uBikeStops.filter(stop => stop.sna.indexOf(this.filterOption.stopName) != -1);
+      return this.uBikeStops.filter(stop => stop.sna.includes(this.filterOption.stopName));
     },
     filterArena() {
       if(this.filterOption.arena === 'all') return this.filterStops;
@@ -39,17 +39,18 @@ const app = Vue.createApp({
       if(!available) return this.filterArena;
       return this.filterArena.filter(stop => stop.sbi > count);
     },
+    sortStops() {
+      const sortObj = this.sortOption.obj;
+      return sortObj ? this.filterAvailable.sort((a, b) => this.sortOption.sort ? a[sortObj] - b[sortObj] : b[sortObj] - a[sortObj]) : this.filterAvailable;
+    },
     maxPage() {
       return Math.ceil(this.filterAvailable.length / this.pageOption.pageSize);
     },
     pageStops() {
       const { currPage, pageSize} = this.pageOption;
-      return this.filterAvailable.slice(currPage * pageSize - pageSize, currPage *pageSize);
+      return this.sortStops.slice(currPage * pageSize - pageSize, currPage *pageSize);
     },
-    sortStops() {
-      const sortObj = this.sortOption.obj;
-      return sortObj ? this.pageStops.sort((a, b) => this.sortOption.sort ? a[sortObj] - b[sortObj] : b[sortObj] - a[sortObj]) : this.pageStops;
-    },
+
   },
   methods: {
     timeFormat(t){

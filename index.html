@@ -76,7 +76,7 @@
         </select>
       </label>
       <label>每頁顯示數量:
-        <select v-model.number="pageOption.pageSize">
+        <select v-model="pageOption.pageSize">
           <option>20</option>
           <option>25</option>
           <option>30</option>
@@ -86,7 +86,7 @@
       </label>
       <label>
         <input type="checkbox" v-model="filterOption.available">僅顯示可用車輛大於
-        <select v-model.number="filterOption.count">
+        <select v-model="filterOption.count">
           <option>0</option>
           <option>5</option>
           <option>10</option>
@@ -118,7 +118,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="{sno, sna, sarea, sbi, tot, mday} in sortStops">
+        <tr v-for="{sno, sna, sarea, sbi, tot, mday} in pageStops">
           <td>{{ sno }}</td>
           <td>{{ sna }}</td>
           <td>{{ sarea }}</td>
@@ -131,7 +131,7 @@
     <ul class="pageBar">
       <li @click="pageOption.currPage--" v-show="pageOption.currPage > 1"><i class="fa fa-arrow-left"></i></li>
       <li v-for="item in maxPage" 
-        :class="{'active': pageOption.currPage == item}" 
+        :class="{'active': pageOption.currPage === item}" 
         @click="pageOption.currPage=item">{{ item }}</li>
       <li @click="pageOption.currPage++" v-show="pageOption.currPage !== maxPage && maxPage > 1"><i class="fa fa-arrow-right"></i></li>
     </ul>
