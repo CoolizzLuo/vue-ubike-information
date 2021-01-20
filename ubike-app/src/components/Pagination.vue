@@ -1,25 +1,20 @@
 <template>
     <ul class="pageBar">
-        <li @click="currPage--" v-show="currPage > 1"><i class="fa fa-arrow-left"></i></li>
-        <li v-for="i in maxPage" :key=i :class="{'active': currPage === i}" @click="currPage=i">{{ i }}</li>
-        <li @click="currPage++" v-show="currPage !== maxPage && maxPage > 1"><i class="fa fa-arrow-right"></i></li>
+        <li @click="updatePage(currPage - 1)" v-show="currPage > 1"><i class="fa fa-arrow-left"></i></li>
+        <li v-for="i in maxPage" :key=i :class="{'active': currPage === i}" @click="updatePage(i)">{{ i }}</li>
+        <li @click="updatePage(currPage + 1)" v-show="currPage !== maxPage && maxPage > 1"><i class="fa fa-arrow-right"></i></li>
     </ul>
 </template>
 
 <script>
 export default {
     props: {
-            page: Number,
-            maxPage: Number,
+        currPage: Number,
+        maxPage: Number,
     },
-    data() {
-        return {
-            currPage: this.page,
-        }
-    },
-    watch: {
-        currPage() {
-            this.$emit('updatePage', this.currPage);
+    methods: {
+        updatePage(page) {
+          this.$emit('updatePage', page);
         }
     },
 }

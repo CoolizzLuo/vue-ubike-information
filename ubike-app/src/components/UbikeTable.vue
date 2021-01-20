@@ -37,20 +37,24 @@
 <script>
 export default {
     props: ['list', 'objTemp', 'isAscTemp']
-    ,
-    data() {
-        return {
-            obj: this.objTemp,
-            isAsc: this.isAscTemp,
-        }
-    },
-    watch: {
-        obj() {
-            this.sendChangeSort();
-        },
-        isAsc() {
-            this.sendChangeSort();
-        }
+	,
+    computed: {
+		obj: {
+			get() {
+				return this.objTemp;
+			},
+			set(val) {
+				this.sendChangeSort(val, this.isAscTemp);
+			}
+		},
+		isAsc: {
+			get() {
+				return this.isAscTemp;
+			},
+			set(val) {
+				this.sendChangeSort(this.objTemp, val);
+			}
+		},
     },
     methods: {
         timeFormat(t){
@@ -66,15 +70,10 @@ export default {
             return date.join("/") + ' ' + time.join(":");
         },
         setSort(obj) {
-            if(this.obj === obj) {
-                this.isAsc = !this.isAsc;
-            } else {
-                this.obj = obj;
-                this.isAsc = true;
-            }
+            this.obj !== obj ? this.obj = obj : this.isAsc = !this.isAsc;
         },
-        sendChangeSort() {
-            this.$emit('sortChange', this.obj, this.isAsc);
+        sendChangeSort(obj, isAsc) {
+            this.$emit('sortChange', obj, isAsc);
         },
     },
 }

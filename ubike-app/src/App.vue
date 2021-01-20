@@ -8,8 +8,8 @@
   </p>
   <hr>
   <search-component v-bind="filterOption" :pageSize="pageOption.pageSize" @updateSearch="updateSearch" @updatePageSize="updatePageSize"/>
-  <ubike-component :objTemp="filterOption.obj" :isAscTemp="filterOption.isAsc" :list="pageStops" @sortChange="updateSort" />
-  <page-component :page="pageOption.currPage" :maxPage="maxPage" @updatePage="updatePage"/>
+  <ubike-component :objTemp="sortOption.obj" :isAscTemp="sortOption.isAsc" :list="pageStops" @sortChange="updateSort" />
+  <page-component :currPage="pageOption.currPage" :maxPage="maxPage" @updatePage="updatePage"/>
   
 </template>
 
@@ -35,7 +35,7 @@ export default {
       },
       sortOption: {
         obj: '', // sbi, tot
-        isAsc: '',
+        isAsc: false,
       },
       pageOption: {
         currPage: 1,
